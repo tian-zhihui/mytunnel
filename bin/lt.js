@@ -10,6 +10,10 @@ const { version } = require('../package');
 const { argv } = yargs
   .usage('Usage: lt --port [num] <options>')
   .env(true)
+  .option('t', {
+    alias: 'token',
+    describe: 'Authentication token',
+  })
   .option('p', {
     alias: 'port',
     describe: 'Internal HTTP server port',
@@ -49,7 +53,7 @@ const { argv } = yargs
   .option('print-requests', {
     describe: 'Print basic request info',
   })
-  .require('port')
+  .demandOption('port')
   .boolean('local-https')
   .boolean('allow-invalid-cert')
   .boolean('print-requests')
@@ -64,6 +68,7 @@ if (typeof argv.port !== 'number') {
 
 (async () => {
   const tunnel = await localtunnel({
+    token: argv.token,
     port: argv.port,
     host: argv.host,
     subdomain: argv.subdomain,
@@ -73,11 +78,11 @@ if (typeof argv.port !== 'number') {
     local_key: argv.localKey,
     local_ca: argv.localCa,
     allow_invalid_cert: argv.allowInvalidCert,
-  }).catch(err => {
+  }).catch((err) => {
     throw err;
   });
 
-  tunnel.on('error', err => {
+  tunnel.on('error', (err) => {
     throw err;
   });
 
@@ -97,7 +102,7 @@ if (typeof argv.port !== 'number') {
   }
 
   if (argv['print-requests']) {
-    tunnel.on('request', info => {
+    tunnel.on('request', (info) => {
       console.log(new Date().toString(), info.method, info.path);
     });
   }

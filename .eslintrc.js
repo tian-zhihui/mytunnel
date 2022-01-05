@@ -7,7 +7,7 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': [
-      'warn',
+      'error',
       {
         printWidth: 100,
         tabWidth: 2,
@@ -18,4 +18,4 @@ module.exports = {
       },
     ],
   },
-}
+};
